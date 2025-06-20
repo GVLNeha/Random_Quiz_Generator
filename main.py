@@ -10,7 +10,7 @@ from typing import Dict,List
 from starlette.responses import JSONResponse
 
 app = FastAPI()
-client = OpenAI(api_key="REMOVEDproj-6dn9ZvkYHvCAnJmtub5tb65Koz0IXIj-jdMVr97FnBxapdgRZqGrNetSpjSp5mSWSR3JBFdCJUT3BlbkFJshUCGmr8G_-NILkAsHL5VqvMJrpT4pRQgq_UApG3mFuRGsz0Bh3b6WqMdzlX4MvsBXJ68JgT4A")
+client = OpenAI()
 
 class Diff(str,enum.Enum):
     easy="easy"
