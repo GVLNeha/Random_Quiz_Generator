@@ -1,0 +1,5 @@
+validate topic, i.e, ai should not hallucinate on nonsense stuff -done
+make sure user doesn't give null topic (it is take null topic as basic algebra) - done
+put limit to number of questions (somewhere around 30 ig)- done put 20
+negative number of questions shouldn't be allowed, display a error message - done
+set character limit to 100 characters for topic - done

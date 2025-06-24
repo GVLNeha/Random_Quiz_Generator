@@ -35,8 +35,22 @@ class QuizOut(BaseModel):
 
 @app.post("/generate-quiz/", response_model=QuizOut)
 def generate_quiz(quiz: Quiz):
+    if not quiz.topic.strip():
+        return JSONResponse(status_code=400, content={"error": "Topic cannot be empty."})
+
+    if len(quiz.topic.strip()) > 100:
+        return JSONResponse(status_code=400, content={"error": "Topic must be 100 characters or fewer."})
+
+    if quiz.num_questions <= 0 or quiz.num_questions > 20:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "Number of questions must be between 1 and 20."}
+        )
     prompt=f"""
 Generate a {quiz.difficulty} quiz on the topic "{quiz.topic}" with {quiz.num_questions} multiple choice questions.
+Only generate questions if the topic is a real, known subject.
+If it's invalid or not specific enough, respond with:
+"Sorry, I cannot generate questions on that topic."
 Each question should contain:
 - question text
 - 4 options (A-D)
@@ -77,6 +91,12 @@ Only return valid JSON. No extra text.
         cleaned = re.sub(r"```json|```", "", content).strip()
         quiz_json =json.loads(cleaned)
         validated_quiz = QuizOut(**quiz_json)
-        return validated_quiz
+        if not validated_quiz.questions:
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Could not generate questions. Please enter a more specific or valid topic."}
+            )
+        else:
+            return validated_quiz
     except Exception as e:
         return JSONResponse(status_code=500, content={"error":str(e)})
